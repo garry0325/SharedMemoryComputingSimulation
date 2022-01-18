@@ -27,11 +27,11 @@ int uniformly_random(int maximum) {
     return rand() % maximum;
 }
 
-int normally_random(int maximum, double mu, double stdev) {
+int normally_random(int maximum, double mean, double stdev) {
     double v1 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     double v2 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     
-    int v0 = round(cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mu);
+    int v0 = round(cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mean);
     v0 %= maximum;
 
     if(v0 >= maximum) v0 -= maximum;
