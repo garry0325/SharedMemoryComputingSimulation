@@ -31,13 +31,13 @@ int normally_random(int maximum, double mean, double stdev) {
     double v1 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     double v2 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     
-    double v0 = (cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mean);
-    
-    if(v0 >= (double)maximum) v0 -= (double)maximum;
-    if(v0 < 0.0) v0 += (double)maximum;
-    int v3 = (int)v0;
-    
-    return v3;
+    int v0 = round(cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mean);
+    v0 %= maximum;
+
+    if(v0 >= maximum) v0 -= maximum;
+    if(v0 < 0) v0 += maximum;
+
+    return v0;
 }
 
 void initial_uniform_assignment(int processor_count, int memory_count) {
@@ -180,18 +180,21 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
     }
 
 //    FILE *fp = fopen("test.csv", "w");
-//    int M = 1;
-//    double mean = 0, stdev = M/6;
+//
+//    int M = 2;
+//    double mean = 1, stdev = M/6.0;
 //    double sum = 0;
 //    int test = 1000000, array[1000000] = {0};
-//    int k, j;
+//    int k;
+//    double j;
 //    for(k = 0; k < test; k++) {
 //        j = normally_random(M, mean, stdev);
 //        array[k] = j;
 //        sum += j;
-//        fprintf(fp, "%d\n", j);
+//        fprintf(fp, "%lf\n", j);
 //    }
 //    fclose(fp);
+    
 //    j = 0;
 //    sum /= test;
 //    double devsum = 0;
