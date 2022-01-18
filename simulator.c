@@ -27,16 +27,17 @@ int uniformly_random(int maximum) {
     return rand() % maximum;
 }
 
-int normally_random(int maximum, double mean, double stdev) {
+int normally_random(int maximum, double mu, double stdev) {
     double v1 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     double v2 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     
-    double v0 = (cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mean);
-    
-    if(v0 >= (double)maximum) v0 -= (double)maximum;
-    if(v0 < 0.0) v0 += (double)maximum;
-    int v3 = (int)v0;
-    
+    int v0 = round(cos(2 * 3.141593 * v2) * sqrt(-2. * log(v1)) * stdev + mu);
+    v0 %= maximum;
+
+    if(v0 >= maximum) v0 -= maximum;
+    if(v0 < 0) v0 += maximum;
+    int v3 = v0;
+
     return v3;
 }
 
@@ -181,7 +182,7 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
 
 //    FILE *fp = fopen("test.csv", "w");
 //    int M = 2048;
-//    double mean = 2047, stdev = M/6;
+//    double mean = 1024, stdev = M/6;
 //    double sum = 0;
 //    int test = 1000000, array[1000000] = {0};
 //    int k, j;
@@ -200,7 +201,7 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
 //    }
 //    devsum /= test;
 //    devsum = sqrt(devsum);
-//
+
 //    printf("(%d) %lf\n%lf\n",(int) mean,  sum, devsum);
     
     
