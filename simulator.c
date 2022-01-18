@@ -180,8 +180,8 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
     }
 
 //    FILE *fp = fopen("test.csv", "w");
-//    int M = 2048;
-//    double mean = 2047, stdev = M/6;
+//    int M = 1;
+//    double mean = 0, stdev = M/6;
 //    double sum = 0;
 //    int test = 1000000, array[1000000] = {0};
 //    int k, j;
