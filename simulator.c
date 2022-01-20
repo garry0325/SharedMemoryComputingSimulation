@@ -10,6 +10,7 @@
 #define NUM_MEMS (2048)
 #define NUM_PROC (64)
 #define C (1000000)
+#define TERMINATE_TOLERANCE_RATE (0.002)
 
 struct Processor {
     int memory;
@@ -118,7 +119,7 @@ void prioritize_unassigned_processor(int processor_count) {
     }
 }
 
-void update_W(double *avg_wait, int processor_count, int memory_count) {
+int update_W(double *avg_wait, int processor_count, int memory_count, int iteration) {
     int p;
     double sum = 0.0;
     
@@ -128,7 +129,17 @@ void update_W(double *avg_wait, int processor_count, int memory_count) {
         }
     }
     
-    avg_wait[memory_count] = sum / processor_count;
+    sum = sum / processor_count;
+    
+    if(sum > 0.0 && avg_wait[memory_count] > 0.0) {
+        if(fabs(sum - avg_wait[memory_count]) / avg_wait[memory_count] < TERMINATE_TOLERANCE_RATE) {
+            return 1;
+        }
+    }
+    
+    avg_wait[memory_count] = sum;
+    
+    return 0;
 }
 
 void reconfigure(int processor_count, int memory_count) {
@@ -156,7 +167,7 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
                     assign_memory_to_processor_uniformly(procs, m);
                     prioritize_unassigned_processor(procs);
                     reconfigure(procs, m);
-                    update_W(avg_wait, procs, m);
+                    if(update_W(avg_wait, procs, m, i) == 1) break;
                 }
                 deinitialize(procs);
             }
@@ -164,13 +175,12 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
         case 'n':
             for(m = 1; m <= NUM_MEMS; m++) {
                 printf("%d\n", m);
-
                 initial_uniform_assignment(procs, m);
                 for(i = 0; i < C; i++) {
                     assign_memory_to_processor_normally(procs, m);
                     prioritize_unassigned_processor(procs);
                     reconfigure(procs, m);
-                    update_W(avg_wait, procs, m);
+                    if(update_W(avg_wait, procs, m, i) == 1) break;
                 }
                 deinitialize(procs);
             }
