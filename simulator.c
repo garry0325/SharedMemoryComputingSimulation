@@ -23,11 +23,12 @@ struct Processor* processors[NUM_PROC];
 int Memory[NUM_MEMS] = {0};
 int W[NUM_MEMS] = {0};
 
-
+// Generate an integer from uniform distribution given a maximum value
 int uniformly_random(int maximum) {
     return rand() % maximum;
 }
 
+// Generate an integer from normal distribution given a maximum value, a mean, and a standard deviation
 int normally_random(int maximum, double mean, double stdev) {
     double v1 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
     double v2 = ((double)(rand()) + 1.)/((double)(RAND_MAX) + 1.);
@@ -41,6 +42,7 @@ int normally_random(int maximum, double mean, double stdev) {
     return v0;
 }
 
+// Assign a memory to processor based on uniform distribution in the first cycle of normal distribution scenario
 void initial_uniform_assignment(int processor_count, int memory_count) {
     int p;
     for(p = 0; p < processor_count; p++) {
@@ -48,6 +50,7 @@ void initial_uniform_assignment(int processor_count, int memory_count) {
     }
 }
 
+// Initialize the Processor class instances
 void initialize(int processor_count) {
     srand(time(NULL));
     
@@ -60,6 +63,7 @@ void initialize(int processor_count) {
     }
 }
 
+// Clear the parameters of Processor class in preparation for the following number of memory modules
 void deinitialize(int processor_count) {
     int p;
     for(p = 0; p < processor_count; p++) {
@@ -69,6 +73,7 @@ void deinitialize(int processor_count) {
     }
 }
 
+// Assign memory to processors in a uniform distribution fashion
 void assign_memory_to_processor_uniformly(int processor_count, int memory_count) {
     int p, assigned_memory;
     for(p = 0; p < processor_count; p++) {
@@ -83,6 +88,7 @@ void assign_memory_to_processor_uniformly(int processor_count, int memory_count)
     }
 }
 
+// Assign memory to processors in a normal distribution fashion
 void assign_memory_to_processor_normally(int processor_count, int memory_count) {
     int p, assigned_memory;
     for(p = 0; p < processor_count; p++) {
@@ -97,6 +103,7 @@ void assign_memory_to_processor_normally(int processor_count, int memory_count) 
     }
 }
 
+// Find the next processor that has a memory assigned to it in the array of Processor
 int find_next_assigned_processor(int from, int processor_count) {
     int p;
     for(p = from + 1; p < processor_count; p++) {
@@ -106,6 +113,7 @@ int find_next_assigned_processor(int from, int processor_count) {
     return p;
 }
 
+// Move the processors that have no memory assigned to the front
 void prioritize_unassigned_processor(int processor_count) {
     struct Processor* temp;
     int assigned = 0, p;
@@ -119,6 +127,7 @@ void prioritize_unassigned_processor(int processor_count) {
     }
 }
 
+// Update the array of cumulative average of access time
 int update_W(double *avg_wait, int processor_count, int memory_count, int iteration) {
     int p;
     double sum = 0.0;
@@ -142,6 +151,7 @@ int update_W(double *avg_wait, int processor_count, int memory_count, int iterat
     return 0;
 }
 
+// Clear the parameters of Processor class in preparation for the following cycle
 void reconfigure(int processor_count, int memory_count) {
     int p, m;
     for(p = 0; p < processor_count; p++) {
@@ -189,41 +199,4 @@ void simulate(double *avg_wait, int avg_wait_l, int procs, char dist){
             break;
     }
 
-//    FILE *fp = fopen("test.csv", "w");
-//
-//    int M = 2;
-//    double mean = 1, stdev = M/6.0;
-//    double sum = 0;
-//    int test = 1000000, array[1000000] = {0};
-//    int k;
-//    double j;
-//    for(k = 0; k < test; k++) {
-//        j = normally_random(M, mean, stdev);
-//        array[k] = j;
-//        sum += j;
-//        fprintf(fp, "%lf\n", j);
-//    }
-//    fclose(fp);
-    
-//    j = 0;
-//    sum /= test;
-//    double devsum = 0;
-//    for(k = 0; k < test; k++) {
-//        devsum += pow(fabs(array[k] - sum), 2.0);
-//    }
-//    devsum /= test;
-//    devsum = sqrt(devsum);
-//
-//    printf("(%d) %lf\n%lf\n",(int) mean,  sum, devsum);
-    
-    
-    
-    
-    
-    // start of useless code. Just delete it.
-//    for(int i=0; i<avg_wait_l; i++){
-//        avg_wait[i] = i;
-//    }
-    printf("procs: %d\ndist: %c\n", procs, dist);
-    // end of useless code
 }
