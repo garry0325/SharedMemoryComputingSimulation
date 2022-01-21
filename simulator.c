@@ -134,7 +134,9 @@ int update_W(double *avg_wait, int processor_count, int memory_count, int iterat
     
     for(p = 0; p < processor_count; p++) {
         if(processors[p]->granted_access > 0) {
-            sum += (double)processors[p]->access_time / (double)processors[p]->granted_access;
+//            sum += (double)processors[p]->access_time / (double)processors[p]->granted_access;
+            sum += (double)iteration / (double)processors[p]->granted_access;
+
         }
     }
     
